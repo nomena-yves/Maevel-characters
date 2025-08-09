@@ -52,13 +52,39 @@ app.post('/api/characters', (req, res) => {
 
 // PUT update
 app.put('/api/characters/:id', (req, res) => {
+
   const data = readData();
+
   const id = parseInt(req.params.id, 10);
-  const idx = data.characters.findIndex(c => c.id === id);
-  if (idx === -1) return res.status(404).json({ error: 'Personnage non trouvé' });
-  data.characters[idx] = { ...data.characters[idx], ...req.body };
-  writeData(data, res, () => res.json({ message: 'Modifié', characters: data.characters }));
+
+  
+  let found = false;
+  for (let i = 0; i < data.characters.length; i++) {
+    if (data.characters[i].id === id) {
+
+      if (req.body.name) {
+        data.characters[i].name = req.body.name;
+      }
+      if (req.body.realName) {
+        data.characters[i].realName = req.body.realName;
+      }
+      if (req.body.universe) {
+        data.characters[i].universe = req.body.universe;
+      }
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    return res.status(404).json({ error: 'Personnage non trouvé' });
+  }
+
+  writeData(data, res, () => {
+    res.json({ message: 'Personnage modifié', characters: data.characters });
+  });
 });
+
 
 // DELETE
 app.delete('/api/characters/:id', (req, res) => {
