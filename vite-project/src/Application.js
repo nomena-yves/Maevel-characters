@@ -1,11 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const path = require('path');
 
 const app = express();
 const PORT = 3000;
-const filePath = path.join(__dirname, 'characters.json');
+const filePath = 'characters.json'; // Chemin relatif simple (moins sûr)
 
 app.use(cors());
 app.use(express.json());
